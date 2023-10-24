@@ -42,6 +42,36 @@ public void Configure(IApplicationBuilder app)
 
     // Other middleware and routing configuration
 }
+
+using System;
+
+public class MyEntity
+{
+    // Define the field with a default value
+    public string SomeField { get; }
+
+    public MyEntity()
+    {
+        // Check if the environment variable is set
+        string envValue = Environment.GetEnvironmentVariable("MyVariableName");
+
+        // Use the environment variable value if it's set, otherwise use the default value
+        SomeField = !string.IsNullOrEmpty(envValue) ? envValue : "DefaultValue";
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        // Create an instance of MyEntity
+        MyEntity entity = new MyEntity();
+
+        // Access the field
+        Console.WriteLine("SomeField: " + entity.SomeField);
+    }
+}
+
 ```
 
 3. Now, when an HTTP request is made, the `CustomHeaderMiddleware` will intercept it and check for the existence of the `pc_session_id` header. You can perform any desired logic with the header value within this middleware.
