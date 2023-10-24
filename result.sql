@@ -93,3 +93,46 @@ rankedcust	customer_id	customer_name	gender	age	customer_id	city_id_visited	date
 1	1001	Michael	M	25	1001	2004	2005-01-01	2004	Miami	800
 1	1002	Winston	M	40	1002	2001	2012-01-01	2001	Seattle	500
 1	1004	Jamie	F	34	1004	2003	2013-01-01	2003	SF	2000
+
+
+
+
+public class AgencyDutyTypeGet : SessionRequestBase, IStoredProceduresBase
+{
+    [OracleReturnDirection("Input")][Required][Key] public double AGEN_ID { get; set; }
+    [OracleReturnDirection("InputOutput")] public double PO_RESPONSE_CD { get; set; }
+    [OracleReturnDirection("InputOutput")] public string? PO_RESPONSE_TXT { get; set; }
+}
+
+public class SessionRequestBase
+{
+    public string PI_SESSION_APPL_CD { get; }
+}
+  
+public interface IStoredProceduresBase
+{
+    public string GetStoredProcedureName();
+}
+
+public class GetById : StoredProcedure
+{
+    public readonly IStoredProceduresBase _model;
+
+    public GetById(IStoredProceduresBase model) : base(model.GetStoredProcedureName())
+    {
+        _model = model ?? throw new ArgumentNullException(nameof(model));
+    }
+
+    public override void AddParameters(OracleDynamicParameters parameters)
+    {
+        var type = _model.GetType();
+        var methodInfos = type.GetMethods();
+        MemberInfo info = _model.GetType();
+        var attributes = info.GetCustomAttributes(true);
+
+        foreach (var method in methodInfos)
+            if (method.Name.StartsWith("get_") && method.GetCustomAttribute<OracleReturnDirectionAttribute>() != null)
+            {
+              //do somthing here
+            }
+      }
