@@ -136,3 +136,26 @@ public class GetById : StoredProcedure
               //do somthing here
             }
       }
+
+var properties = type.GetProperties();
+
+        foreach (var property in properties)
+        {
+            // Get custom attributes on the property
+            var attributes = property.GetCustomAttributes(true);
+
+            foreach (var attribute in attributes)
+            {
+                if (attribute is OracleReturnDirection returnDirectionAttribute)
+                {
+                    // You found the OracleReturnDirection attribute
+                    string value = returnDirectionAttribute.Value;
+
+                    // Use the value as needed
+                    Console.WriteLine($"Property: {property.Name}, OracleReturnDirection: {value}");
+
+                    // Here, you can use 'value' to set up OracleDynamicParameters
+                    // based on the OracleReturnDirection value.
+                }
+            }
+        }
